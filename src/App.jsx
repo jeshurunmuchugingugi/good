@@ -72,6 +72,8 @@ function App() {
         setCurrentPage('booking');
       } else if (path === '/space-calculator') {
         setCurrentPage('space-calculator');
+      } else if (path === '/transport') {
+        setCurrentPage('transport');
       }
     };
     
@@ -104,6 +106,8 @@ function App() {
       window.history.pushState({}, '', '/browse/reserveunit');
     } else if (page === 'space-calculator') {
       window.history.pushState({}, '', '/space-calculator');
+    } else if (page === 'transport') {
+      window.history.pushState({}, '', '/transport');
     } else if (page === 'landing') {
       window.history.pushState({}, '', '/');
     }

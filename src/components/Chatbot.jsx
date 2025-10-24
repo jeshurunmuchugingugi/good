@@ -1,218 +1,119 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
+import { MessageCircle, X, Send } from 'lucide-react';
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "Nice!",
-      sender: 'bot',
-      timestamp: new Date()
-    },
-    {
-      id: 2,
-      text: "What is your role at Acme Corp?",
-      sender: 'bot',
-      timestamp: new Date()
-    }
+    { id: 1, text: "Hi! How can I help you today?", sender: 'bot' },
+    { id: 2, text: "What would you like to know about our storage units?", sender: 'bot' }
   ]);
-  const [newMessage, setNewMessage] = useState('');
+  const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Simulate real-time messaging (in production, use WebSocket or similar)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Check for new messages from admin (mock implementation)
-      // In production, this would be replaced with WebSocket connection
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      const message = {
-        id: Date.now(),
-        text: newMessage,
-        sender: 'user',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, message]);
-      setNewMessage('');
-      
-      // Send to admin (mock implementation)
-      // In production, send via WebSocket or API
-      console.log('Sending to admin:', message);
-      
-      // Simulate bot typing
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-        // Add mock admin response
-        const adminResponse = {
-          id: Date.now() + 1,
-          text: "Thanks for your message! An admin will respond shortly.",
-          sender: 'bot',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, adminResponse]);
-      }, 2000);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
+  const handleSend = () => {
+    if (!input.trim()) return;
+    
+    setMessages(prev => [...prev, { id: Date.now(), text: input, sender: 'user' }]);
+    setInput('');
+    
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, {
+        id: Date.now() + 1,
+        text: "Thanks! An admin will respond shortly.",
+        sender: 'bot'
+      }]);
+    }, 1500);
   };
 
   return (
     <>
-      {/* Floating Bot Button */}
-      <div 
-        className="fixed bottom-6 right-6 cursor-pointer animate-bounce"
-        style={{zIndex: 9999, animation: 'bounce 2s infinite'}}
-        onClick={() => setIsOpen(true)}
-      >
-        <div 
-          className="w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-110 pulse"
-          style={{backgroundColor: '#FC9E3B', boxShadow: '0 0 20px rgba(252, 158, 59, 0.5)'}}
+      {/* Floating Chat Button */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 w-14 h-14 bg-purple-600 hover:bg-purple-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 z-50"
+          aria-label="Open chat"
         >
-          <MessageCircle className="w-8 h-8 text-white" />
-        </div>
-      </div>
+          <MessageCircle className="w-6 h-6 text-white" />
+        </button>
+      )}
 
-      {/* Chatbot Popup */}
+      {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 h-96 bg-white rounded-2xl shadow-2xl border overflow-hidden" style={{zIndex: 9999}}>
+        <div className="fixed bottom-6 right-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 animate-in slide-in-from-bottom-5 duration-300">
           {/* Header */}
-          <div className="bg-purple-500 text-white p-4 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+          <div className="bg-purple-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-purple-700 rounded-full flex items-center justify-center">
                 <MessageCircle className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-semibold">LeadBot</div>
-                <div className="text-xs opacity-90">Online Now</div>
+                <h3 className="font-semibold">Support Chat</h3>
+                <p className="text-xs opacity-90">Online</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <button className="hover:bg-purple-600 p-1 rounded">
-                <Minimize2 className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="hover:bg-purple-600 p-1 rounded"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="hover:bg-purple-700 p-2 rounded-full transition-colors"
+              aria-label="Close chat"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 p-4 h-64 overflow-y-auto bg-gray-50">
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-xs ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
-                    {message.sender === 'bot' && (
-                      <div className="flex items-center space-x-2 mb-1">
-                        <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
-                          <MessageCircle className="w-3 h-3 text-white" />
-                        </div>
-                        <span className="text-xs text-gray-500">LeadBot</span>
-                      </div>
-                    )}
-                    <div className={`p-3 rounded-2xl ${
-                      message.sender === 'user' 
-                        ? 'bg-purple-500 text-white' 
-                        : 'bg-white border shadow-sm'
-                    }`}>
-                      <p className="text-sm">{message.text}</p>
-                    </div>
+          <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-3">
+            {messages.map(msg => (
+              <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[75%] p-3 rounded-2xl ${
+                  msg.sender === 'user'
+                    ? 'bg-purple-600 text-white rounded-br-sm'
+                    : 'bg-white border shadow-sm rounded-bl-sm'
+                }`}>
+                  <p className="text-sm">{msg.text}</p>
+                </div>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-white border shadow-sm p-3 rounded-2xl rounded-bl-sm">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}} />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}} />
                   </div>
                 </div>
-              ))}
-              
-              {/* Quick Reply Buttons (for first interaction) */}
-              {messages.length === 2 && (
-                <div className="flex flex-wrap gap-2 mt-4">
-                  <button 
-                    onClick={() => setNewMessage('Marketing')}
-                    className="px-3 py-1 border border-purple-300 text-purple-600 rounded-full text-sm hover:bg-purple-50"
-                  >
-                    Marketing
-                  </button>
-                  <button 
-                    onClick={() => setNewMessage('Sales')}
-                    className="px-3 py-1 border border-purple-300 text-purple-600 rounded-full text-sm hover:bg-purple-50"
-                  >
-                    Sales
-                  </button>
-                  <button 
-                    onClick={() => setNewMessage('Support')}
-                    className="px-3 py-1 border border-purple-300 text-purple-600 rounded-full text-sm hover:bg-purple-50"
-                  >
-                    Support
-                  </button>
-                </div>
-              )}
-              
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
-                      <MessageCircle className="w-3 h-3 text-white" />
-                    </div>
-                    <div className="bg-white border shadow-sm p-3 rounded-2xl">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t bg-white">
-            <div className="flex items-center space-x-2">
-              <Input
-                placeholder="Reply to LeadBot..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="flex-1 border-gray-300 rounded-full"
+          <div className="p-4 border-t bg-white rounded-b-2xl">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Type a message..."
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-              <Button
-                onClick={handleSendMessage}
-                className="rounded-full w-10 h-10 p-0"
-                style={{backgroundColor: '#FC9E3B'}}
-                disabled={!newMessage.trim()}
+              <button
+                onClick={handleSend}
+                disabled={!input.trim()}
+                className="w-10 h-10 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
+                aria-label="Send message"
               >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
-            <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
-              <span>We run on Drift</span>
-              <span>⚡ by Drift</span>
+                <Send className="w-4 h-4 text-white" />
+              </button>
             </div>
           </div>
         </div>

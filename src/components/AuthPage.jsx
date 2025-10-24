@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { ArrowLeft, Mail, Lock, User, Phone } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Alert, AlertDescription } from './ui/alert';
 import { mockAPI } from '../services/mockData';
+import LoginForm from './auth/LoginForm';
+import RegisterForm from './auth/RegisterForm';
 
 export default function AuthPage({ onNavigate, onLogin }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -89,7 +88,6 @@ export default function AuthPage({ onNavigate, onLogin }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Button variant="ghost" onClick={() => onNavigate('landing')}>
@@ -114,170 +112,34 @@ export default function AuthPage({ onNavigate, onLogin }) {
                 <TabsTrigger value="register">Register</TabsTrigger>
               </TabsList>
 
-              {/* Login Form */}
               <TabsContent value="login">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div>
-                    <Label htmlFor="login-email">Email Address</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="login-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="login-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="login-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  <div className="flex items-center justify-between text-sm">
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" className="rounded" />
-                      <span className="text-gray-600">Remember me</span>
-                    </label>
-                    <button type="button" className="text-blue-600 hover:underline">
-                      Forgot password?
-                    </button>
-                  </div>
-
-                  <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                    {loading ? 'Signing in...' : 'Sign In'}
-                  </Button>
-
-                  <div className="text-center text-sm text-gray-600 mt-4">
-                    <p>Demo accounts:</p>
-                    <p className="text-xs mt-1">User: any email | Admin: admin@jesh.com</p>
-                  </div>
-                </form>
+                <LoginForm
+                  email={loginEmail}
+                  setEmail={setLoginEmail}
+                  password={loginPassword}
+                  setPassword={setLoginPassword}
+                  onSubmit={handleLogin}
+                  loading={loading}
+                  error={error}
+                />
               </TabsContent>
 
-              {/* Register Form */}
               <TabsContent value="register">
-                <form onSubmit={handleRegister} className="space-y-4">
-                  <div>
-                    <Label htmlFor="register-name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="register-name"
-                        type="text"
-                        placeholder="John Doe"
-                        value={registerName}
-                        onChange={(e) => setRegisterName(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="register-email">Email Address</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="register-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={registerEmail}
-                        onChange={(e) => setRegisterEmail(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="register-phone">Phone Number</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="register-phone"
-                        type="tel"
-                        placeholder="+254712345678"
-                        value={registerPhone}
-                        onChange={(e) => setRegisterPhone(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="register-password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="register-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={registerPassword}
-                        onChange={(e) => setRegisterPassword(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="register-confirm-password">Confirm Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-                      <Input
-                        id="register-confirm-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={registerConfirmPassword}
-                        onChange={(e) => setRegisterConfirmPassword(e.target.value)}
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  <div className="text-sm">
-                    <label className="flex items-start gap-2">
-                      <input type="checkbox" className="rounded mt-1" required />
-                      <span className="text-gray-600">
-                        I agree to the Terms of Service and Privacy Policy
-                      </span>
-                    </label>
-                  </div>
-
-                  <Button type="submit" className="w-full" size="lg" disabled={loading}>
-                    {loading ? 'Creating account...' : 'Create Account'}
-                  </Button>
-                </form>
+                <RegisterForm
+                  name={registerName}
+                  setName={setRegisterName}
+                  email={registerEmail}
+                  setEmail={setRegisterEmail}
+                  phone={registerPhone}
+                  setPhone={setRegisterPhone}
+                  password={registerPassword}
+                  setPassword={setRegisterPassword}
+                  confirmPassword={registerConfirmPassword}
+                  setConfirmPassword={setRegisterConfirmPassword}
+                  onSubmit={handleRegister}
+                  loading={loading}
+                  error={error}
+                />
               </TabsContent>
             </Tabs>
           </CardContent>

@@ -40,6 +40,69 @@ const furnitureData = {
   ]
 };
 
+// Room selector button component
+function RoomButton({ room, isSelected, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
+        isSelected ? 'text-white' : 'bg-gray-100 hover:bg-gray-200'
+      }`}
+      style={isSelected ? {backgroundColor: '#FC9E3B'} : {}}
+    >
+      {room}
+    </button>
+  );
+}
+
+// Space summary panel component
+function SpaceSummary({ totalSpace, recommendedSize, onFindUnits }) {
+  return (
+    <>
+      <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <div className="text-sm text-gray-600 mb-2">You need approx.</div>
+        <div className="text-2xl font-bold">{totalSpace.toFixed(1)}m²</div>
+        <div className="text-sm text-gray-600 mt-2">Recommended: {recommendedSize}</div>
+      </div>
+      <Button 
+        onClick={onFindUnits}
+        className="w-full mt-4"
+        style={{backgroundColor: '#FC9E3B', color: 'white'}}
+        disabled={totalSpace === 0}
+      >
+        Find Available Units
+      </Button>
+    </>
+  );
+}
+
+// Furniture item card component
+function FurnitureItem({ item, count, onUpdateCount }) {
+  return (
+    <div className="border rounded-lg p-4 text-center">
+      <div className="text-4xl mb-2">{item.icon}</div>
+      <div className="font-medium text-sm mb-2">{item.name}</div>
+      <div className="text-xs text-gray-500 mb-3">{item.space}m² each</div>
+      <div className="flex items-center justify-center space-x-3">
+        <button
+          onClick={() => onUpdateCount(item.name, -1)}
+          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+          disabled={!count}
+        >
+          <Minus className="w-4 h-4" />
+        </button>
+        <span className="w-8 text-center font-medium">{count || 0}</span>
+        <button
+          onClick={() => onUpdateCount(item.name, 1)}
+          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function SpaceCalculator({ onNavigate }) {
   const [selectedRoom, setSelectedRoom] = useState('Living Room');
   const [selectedItems, setSelectedItems] = useState({});
@@ -57,7 +120,6 @@ export default function SpaceCalculator({ onNavigate }) {
     
     setSelectedItems(newItems);
     
-    // Calculate total space
     let total = 0;
     Object.entries(newItems).forEach(([name, count]) => {
       const item = Object.values(furnitureData).flat().find(f => f.name === name);
@@ -74,8 +136,7 @@ export default function SpaceCalculator({ onNavigate }) {
   };
 
   const findAvailableUnits = () => {
-    const recommendedSize = getRecommendedSize();
-    onNavigate('units', { recommendedSize, calculatedSpace: totalSpace });
+    onNavigate('units', { recommendedSize: getRecommendedSize(), calculatedSpace: totalSpace });
   };
 
   return (
@@ -93,79 +154,40 @@ export default function SpaceCalculator({ onNavigate }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8 h-full">
-          {/* Room Selection - Left Side */}
           <div className="w-80 bg-white rounded-lg shadow-sm p-6 h-fit">
             <h2 className="text-xl font-semibold mb-4" style={{backgroundColor: '#2C3E50', color: 'white', padding: '12px', borderRadius: '8px', textAlign: 'center'}}>
               Select a room
             </h2>
             <div className="space-y-2">
               {Object.keys(furnitureData).map((room) => (
-                <button
+                <RoomButton
                   key={room}
+                  room={room}
+                  isSelected={selectedRoom === room}
                   onClick={() => setSelectedRoom(room)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                    selectedRoom === room 
-                      ? 'text-white' 
-                      : 'bg-gray-100 hover:bg-gray-200'
-                  }`}
-                  style={selectedRoom === room ? {backgroundColor: '#FC9E3B'} : {}}
-                >
-                  {room}
-                </button>
+                />
               ))}
             </div>
-
-            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 mb-2">You need approx.</div>
-              <div className="text-2xl font-bold">{totalSpace.toFixed(1)}m²</div>
-              <div className="text-sm text-gray-600 mt-2">Recommended: {getRecommendedSize()}</div>
-            </div>
-
-            <Button 
-              onClick={findAvailableUnits}
-              className="w-full mt-4"
-              style={{backgroundColor: '#FC9E3B', color: 'white'}}
-              disabled={totalSpace === 0}
-            >
-              Find Available Units
-            </Button>
+            <SpaceSummary
+              totalSpace={totalSpace}
+              recommendedSize={getRecommendedSize()}
+              onFindUnits={findAvailableUnits}
+            />
           </div>
 
-          {/* Furniture Selection - Right Side */}
           <div className="flex-1 bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-4" style={{backgroundColor: '#2C3E50', color: 'white', padding: '12px', borderRadius: '8px', textAlign: 'center'}}>
               Select items to store
             </h2>
             <h3 className="text-lg font-medium mb-4">{selectedRoom}</h3>
-            
             <div className="grid grid-cols-3 gap-4">
               {furnitureData[selectedRoom].map((item) => (
-                <div key={item.name} className="border rounded-lg p-4 text-center">
-                  <div className="text-4xl mb-2">{item.icon}</div>
-                  <div className="font-medium text-sm mb-2">{item.name}</div>
-                  <div className="text-xs text-gray-500 mb-3">{item.space}m² each</div>
-                  
-                  <div className="flex items-center justify-center space-x-3">
-                    <button
-                      onClick={() => updateItemCount(item.name, -1)}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                      disabled={!selectedItems[item.name]}
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    
-                    <span className="w-8 text-center font-medium">
-                      {selectedItems[item.name] || 0}
-                    </span>
-                    
-                    <button
-                      onClick={() => updateItemCount(item.name, 1)}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
+                <FurnitureItem
+                  key={item.name}
+                  item={item}
+                  count={selectedItems[item.name]}
+                  onUpdateCount={updateItemCount}
+                />
               ))}
             </div>
           </div>
