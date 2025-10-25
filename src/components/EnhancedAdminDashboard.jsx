@@ -7,7 +7,8 @@ import ReservationsView from './admin/ReservationsView';
 import TransportationView from './admin/TransportationView';
 import CustomersView from './admin/CustomersView';
 import ReportsView from './admin/ReportsView';
-import DynamicPayments from './DynamicPayments';
+import DynamicPayments from './admin/DynamicPayments';
+
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 
 export default function EnhancedAdminDashboard({ user, onLogout }) {

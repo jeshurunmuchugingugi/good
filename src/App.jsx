@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
-import HomePage from './components/HomePage';
+
 import StorageUnits from './components/StorageUnits';
 import BookingFlow from './components/BookingFlow';
 import PaymentPage from './components/PaymentPage';
 import TransportScheduling from './components/TransportScheduling';
-import AuthPage from './components/AuthPage';
+
 import UserDashboard from './components/UserDashboard';
-import AdminDashboard from './components/AdminDashboard';
+
 import AdminAuthPage from './components/AdminAuthPage';
 import EnhancedAdminDashboard from './components/EnhancedAdminDashboard';
 import SpaceCalculator from './components/SpaceCalculator';
 import UnitDescription from './components/UnitDescription';
-import ModernLandingPage from './components/ModernLandingPage';
+
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -140,15 +140,11 @@ function App() {
   // Render current page
   const renderPage = () => {
     switch (currentPage) {
-      case 'home':
-        return <HomePage />;
-      
+
       case 'landing':
         return <LandingPage onNavigate={navigate} />;
       
-      case 'modern-landing':
-        return <ModernLandingPage onNavigate={navigate} />;
-      
+
       case 'units':
         return <StorageUnits 
           onNavigate={navigate} 
@@ -190,9 +186,6 @@ function App() {
           />
         );
       
-      case 'auth':
-        return <AuthPage onNavigate={navigate} onLogin={handleLogin} />;
-      
       case 'dashboard':
         return currentUser ? (
           <UserDashboard 
@@ -201,18 +194,17 @@ function App() {
             onLogout={handleLogout} 
           />
         ) : (
-          <AuthPage onNavigate={navigate} onLogin={handleLogin} />
+          <LandingPage onNavigate={navigate} />
         );
       
       case 'admin-dashboard':
         return currentUser?.role === 'admin' ? (
-          <AdminDashboard 
+          <EnhancedAdminDashboard 
             user={currentUser} 
-            onNavigate={navigate} 
             onLogout={handleLogout} 
           />
         ) : (
-          <AuthPage onNavigate={navigate} onLogin={handleLogin} />
+          <LandingPage onNavigate={navigate} />
         );
       
       case 'admin-auth':

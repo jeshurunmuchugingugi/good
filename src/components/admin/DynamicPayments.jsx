@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { mockPayments } from '../services/mockData';
-import { PageHeader } from './payments/PageHeader';
-import { StatsSection } from './payments/StatsSection';
-import { FilterTabs } from './payments/FilterTabs';
-import { PaymentsTable } from './payments/PaymentsTable';
-import { Pagination } from './payments/Pagination';
-import { PaymentMethodsCard } from './payments/PaymentMethodsCard';
-import { usePaymentData } from './payments/usePaymentData';
+import { mockPayments } from '../../services/mockData';
+import { PageHeader } from '../payments/PageHeader';
+import { StatsSection } from '../payments/StatsSection';
+import { FilterTabs } from '../payments/FilterTabs';
+import { PaymentsTable } from '../payments/PaymentsTable';
+import { Pagination } from '../payments/Pagination';
+import { PaymentMethodsCard } from '../payments/PaymentMethodsCard';
+import { usePaymentData } from '../payments/usePaymentData';
 
 export default function DynamicPayments() {
   const [searchTerm, setSearchTerm] = useState('');
