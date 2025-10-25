@@ -10,6 +10,8 @@ import UserDashboard from './components/UserDashboard';
 
 import AdminAuthPage from './components/AdminAuthPage';
 import EnhancedAdminDashboard from './components/EnhancedAdminDashboard';
+import UnitsDashboard from './components/admin/UnitsDashboard';
+import Dashboard from './components/admin/Dashboard';
 import SpaceCalculator from './components/SpaceCalculator';
 import UnitDescription from './components/UnitDescription';
 import AboutPage from './components/AboutPage';
@@ -51,7 +53,19 @@ function App() {
     // Check URL and set initial page
     const checkUrl = () => {
       const path = window.location.pathname;
-      if (path.startsWith('/admin/dashboard')) {
+      if (path === '/admin/dashboard/units') {
+        if (adminToken && adminUserStr) {
+          setCurrentPage('admin-units');
+        } else {
+          setCurrentPage('admin-auth');
+        }
+      } else if (path === '/admin/dashboard') {
+        if (adminToken && adminUserStr) {
+          setCurrentPage('admin-dashboard');
+        } else {
+          setCurrentPage('admin-auth');
+        }
+      } else if (path.startsWith('/admin/dashboard')) {
         if (adminToken && adminUserStr) {
           setCurrentPage('admin');
         } else {
@@ -96,6 +110,10 @@ function App() {
     if (page === 'admin-auth') {
       window.history.pushState({}, '', '/admin');
     } else if (page === 'admin') {
+      window.history.pushState({}, '', '/admin/dashboard');
+    } else if (page === 'admin-units') {
+      window.history.pushState({}, '', '/admin/dashboard/units');
+    } else if (page === 'admin-dashboard') {
       window.history.pushState({}, '', '/admin/dashboard');
     } else if (page === 'book-storage') {
       window.history.pushState({}, '', '/book-storage');
@@ -198,16 +216,6 @@ function App() {
           <LandingPage onNavigate={navigate} />
         );
       
-      case 'admin-dashboard':
-        return currentUser?.role === 'admin' ? (
-          <EnhancedAdminDashboard 
-            user={currentUser} 
-            onLogout={handleLogout} 
-          />
-        ) : (
-          <LandingPage onNavigate={navigate} />
-        );
-      
       case 'admin-auth':
         return <AdminAuthPage onLogin={handleAdminLogin} />;
       
@@ -217,6 +225,20 @@ function App() {
             user={adminUser} 
             onLogout={handleAdminLogout} 
           />
+        ) : (
+          <AdminAuthPage onLogin={handleAdminLogin} />
+        );
+      
+      case 'admin-units':
+        return adminUser ? (
+          <UnitsDashboard />
+        ) : (
+          <AdminAuthPage onLogin={handleAdminLogin} />
+        );
+      
+      case 'admin-dashboard':
+        return adminUser ? (
+          <Dashboard />
         ) : (
           <AdminAuthPage onLogin={handleAdminLogin} />
         );

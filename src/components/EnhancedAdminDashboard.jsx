@@ -33,7 +33,7 @@ export default function EnhancedAdminDashboard({ user, onLogout }) {
   );
 
   return (
-    <div className="min-h-screen flex" style={{backgroundColor: '#E6DBDB'}}>
+    <div className="min-h-screen flex bg-gray-50">
       <Sidebar activeTab={activeTab} onTabChange={handleTabChange} />
       <div className="flex-1">
         <Header onLogout={onLogout} />

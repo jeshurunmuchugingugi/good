@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 
 export default function FAQSection() {
@@ -33,7 +32,7 @@ export default function FAQSection() {
   ];
 
   return (
-    <section className="py-16 px-4 max-w-4xl mx-auto">
+    <section className="pt-24 pb-16 px-4 max-w-4xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
         <p className="text-gray-600">Everything you need to know about our storage services</p>
@@ -41,62 +40,44 @@ export default function FAQSection() {
 
       <div className="space-y-4">
         {faqs.map((faq, index) => (
-          <motion.div
+          <div
             key={index}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
-            whileHover={{ shadow: "0 4px 12px rgba(0,0,0,0.1)" }}
-            animate={{
-              borderColor: openIndex === index ? "#f97316" : "#e5e7eb"
-            }}
+            className={`bg-white rounded-xl shadow-sm border overflow-hidden transition-all duration-300 hover:shadow-lg ${
+              openIndex === index ? 'border-orange-500' : 'border-gray-200'
+            }`}
           >
-            <motion.button
+            <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full p-6 text-left flex justify-between items-center hover:bg-gray-50"
-              whileTap={{ scale: 0.995 }}
+              className="w-full p-6 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
             >
               <h3 className="font-semibold text-gray-900 pr-4">{faq.question}</h3>
-              <motion.div
-                animate={{ rotate: openIndex === index ? 45 : 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Plus className={`w-5 h-5 ${openIndex === index ? 'text-orange-500' : 'text-gray-400'}`} />
-              </motion.div>
-            </motion.button>
+              <div className={`transition-transform duration-200 ${
+                openIndex === index ? 'rotate-45' : 'rotate-0'
+              }`}>
+                <Plus className={`w-5 h-5 transition-colors ${
+                  openIndex === index ? 'text-orange-500' : 'text-gray-400'
+                }`} />
+              </div>
+            </button>
 
-            <AnimatePresence>
-              {openIndex === index && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="overflow-hidden"
-                >
-                  <motion.div
-                    initial={{ y: -10 }}
-                    animate={{ y: 0 }}
-                    exit={{ y: -10 }}
-                    transition={{ duration: 0.2, delay: 0.1 }}
-                    className="px-6 pb-6"
-                  >
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            <div className={`transition-all duration-300 ease-out overflow-hidden ${
+              openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
+            }`}>
+              <div className={`px-6 pb-6 transition-transform duration-200 ${
+                openIndex === index ? 'translate-y-0' : '-translate-y-2'
+              }`}>
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
       <div className="text-center mt-12">
         <p className="text-gray-600 mb-4">Still have questions?</p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-        >
+        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-all hover:scale-105">
           Contact Us
-        </motion.button>
+        </button>
       </div>
     </section>
   );

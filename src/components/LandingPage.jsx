@@ -7,7 +7,7 @@ import HowItWorksSection from './landing/HowItWorksSection';
 import CTASection from './landing/CTASection';
 import Footer from './landing/Footer';
 import ClientFeedbackSection from './landing/ClientFeedbackSection';
-
+import FAQSection from './landing/FAQSection';
 
 import Chatbot from './landing/Chatbot';
 import WhyChooseUs from './landing/WhyChooseUs';
@@ -22,8 +22,8 @@ export default function LandingPage({ onNavigate }) {
       <MovingPlansSection />
       <WhyChooseUs />
       <ClientFeedbackSection />
+      <FAQSection />
       <HowItWorksSection />
-
       <CTASection onNavigate={onNavigate} />
       <Footer onNavigate={onNavigate} />
       <Chatbot />
