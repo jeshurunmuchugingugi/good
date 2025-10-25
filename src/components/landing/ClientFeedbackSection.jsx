@@ -45,9 +45,9 @@ export default function ClientFeedbackSection() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-full shadow-lg mb-4">
-            <MessageCircle className="w-5 h-5" style={{color: '#FC9E3B'}} />
-            <span className="font-semibold" style={{color: '#1A2637'}}>CLIENT FEEDBACK</span>
+          <div className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-full shadow-md mb-4">
+            <MessageCircle className="w-5 h-5" style={{color: '#F4A261'}} />
+            <span className="font-semibold text-gray-900">CLIENT FEEDBACK</span>
           </div>
           <p className="text-sm uppercase tracking-wider text-gray-600 font-medium">GET TO HEAR CLIENT TESTIMONIALS</p>
         </div>
@@ -57,41 +57,44 @@ export default function ClientFeedbackSection() {
           {/* Left - Photo */}
           <div className="flex justify-center">
             <div className="relative">
-              <div className="w-80 h-80 rounded-2xl overflow-hidden shadow-xl">
+              <div className="w-72 h-72 rounded-2xl overflow-hidden shadow-lg">
                 <img 
                   src={currentTestimonial.image}
                   alt={currentTestimonial.name}
-                  className="w-full h-full object-cover transition-all duration-500"
+                  className="w-full h-full object-cover object-center transition-all duration-500"
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80';
+                  }}
                 />
               </div>
               {/* Decorative element */}
-              <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full shadow-lg flex items-center justify-center" style={{backgroundColor: '#FC9E3B'}}>
-                <MessageCircle className="w-8 h-8 text-white" />
+              <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-full shadow-lg flex items-center justify-center" style={{backgroundColor: '#F4A261'}}>
+                <MessageCircle className="w-6 h-6 text-white" />
               </div>
             </div>
           </div>
 
           {/* Right - Testimonial */}
-          <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 h-80 flex flex-col justify-center">
+          <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 min-h-72 flex flex-col justify-center">
             {/* Stars */}
             <div className="flex gap-1 mb-6">
               {[...Array(currentTestimonial.rating)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-current" style={{color: '#FC9E3B'}} />
+                <Star key={i} className="w-5 h-5 fill-current" style={{color: '#F4A261'}} />
               ))}
             </div>
             
             {/* Quote */}
             <div className="mb-6">
-              <span className="text-6xl font-serif" style={{color: '#FC9E3B'}}>"</span>
-              <p className="text-lg leading-relaxed inline" style={{color: '#1A2637'}}>
+              <span className="text-5xl font-serif leading-none" style={{color: '#F4A261'}}>"</span>
+              <p className="text-lg leading-relaxed text-gray-700 mt-2">
                 {currentTestimonial.text}
               </p>
             </div>
             
             {/* Author */}
-            <div className="border-t pt-6">
-              <h4 className="font-bold text-xl mb-1" style={{color: '#1A2637'}}>{currentTestimonial.name}</h4>
-              <p className="text-gray-600">— {currentTestimonial.location}</p>
+            <div className="border-t border-gray-200 pt-6">
+              <h4 className="font-semibold text-lg mb-1 text-gray-900">{currentTestimonial.name}</h4>
+              <p className="text-gray-500 text-sm">{currentTestimonial.location}</p>
             </div>
           </div>
         </div>
@@ -100,10 +103,10 @@ export default function ClientFeedbackSection() {
         <div className="flex justify-center items-center gap-6">
           <button 
             onClick={prevTestimonial}
-            className="w-14 h-14 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-lg"
-            style={{backgroundColor: '#FC9E3B'}}
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-105 shadow-md"
+            style={{backgroundColor: '#F4A261'}}
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
           
           {/* Dots indicator */}
@@ -112,11 +115,11 @@ export default function ClientFeedbackSection() {
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                   index === currentIndex ? 'scale-125' : 'hover:scale-110'
                 }`}
                 style={{
-                  backgroundColor: index === currentIndex ? '#FC9E3B' : '#D1D5DB'
+                  backgroundColor: index === currentIndex ? '#F4A261' : '#D1D5DB'
                 }}
               />
             ))}
@@ -124,10 +127,10 @@ export default function ClientFeedbackSection() {
           
           <button 
             onClick={nextTestimonial}
-            className="w-14 h-14 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-lg"
-            style={{backgroundColor: '#FC9E3B'}}
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-105 shadow-md"
+            style={{backgroundColor: '#F4A261'}}
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       </div>

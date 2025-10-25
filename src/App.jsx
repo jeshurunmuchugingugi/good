@@ -12,6 +12,7 @@ import AdminAuthPage from './components/AdminAuthPage';
 import EnhancedAdminDashboard from './components/EnhancedAdminDashboard';
 import SpaceCalculator from './components/SpaceCalculator';
 import UnitDescription from './components/UnitDescription';
+import AboutPage from './components/AboutPage';
 
 
 function App() {
@@ -232,7 +233,7 @@ function App() {
         return <SpaceCalculator onNavigate={navigate} />;
       
       case 'about':
-        return <LandingPage onNavigate={navigate} />;
+        return <AboutPage onNavigate={navigate} />;
       
       default:
         return <LandingPage onNavigate={navigate} />;

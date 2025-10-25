@@ -14,7 +14,7 @@ import WhyChooseUs from './landing/WhyChooseUs';
 
 export default function LandingPage({ onNavigate }) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{backgroundColor: '#FAFAFA'}}>
       <Navigation onNavigate={onNavigate} />
       <HeroSection onNavigate={onNavigate} />
       <FeaturesSection />
